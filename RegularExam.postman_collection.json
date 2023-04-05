@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "4e53a765-81fc-4525-97b6-17be46ed6723",
+		"name": "RegularExam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19726500"
+	},
+	"item": [
+		{
+			"name": "AllContacts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"returning formar is JSON\", () => {\r",
+							"    pm.response.to.be.json;\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/contacts",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ContactByKeyword",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Last name is Jackson\", () => {\r",
+							"    let object = pm.response.json().shift();\r",
+							"    pm.expect(object.lastName).to.be.equal(\"Jackson\")\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/contacts/search/Michael",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"contacts",
+						"search",
+						"Michael"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateContact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Create contact response has 201 or 202 status code\", () => {\r",
+							"\r",
+							"    let response = pm.response;\r",
+							"    let obj = response.json();\r",
+							"    \r",
+							"    pm.expect(response.code).to.have.oneOf([201, 202]);\r",
+							"\r",
+							"    pm.environment.set('contactId', obj.contact.id)\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"firstName\":\"Marie\", \"lastName\":\"Curie\", \"email\":\"marie67@gmail.com\", \"phone\":\"+1 800 200 300\", \"comments\":\"Old friend\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/contacts",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EditContact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Edit should return error status code 404\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/contacts/{{contactId}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"contacts",
+						"{{contactId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteContact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete request should\", () =>{\r",
+							"    let response = pm.response;\r",
+							"    let obj = response.json();\r",
+							"    \r",
+							"    pm.expect(response.code).to.be.equal(200);\r",
+							"    pm.expect(obj.msg).to.be.equal(`Contact deleted: ${pm.environment.get(\"contactId\")}`);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/contacts/{{contactId}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"contacts",
+						"{{contactId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
